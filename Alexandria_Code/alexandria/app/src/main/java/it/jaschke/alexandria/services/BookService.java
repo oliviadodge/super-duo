@@ -3,6 +3,7 @@ package it.jaschke.alexandria.services;
 import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
 import android.support.v4.content.LocalBroadcastManager;
@@ -86,6 +87,7 @@ public class BookService extends IntentService {
 
         if(bookEntry.getCount()>0){
             bookEntry.close();
+            Log.i(LOG_TAG, "book already in database");
             return;
         }
 
@@ -128,8 +130,12 @@ public class BookService extends IntentService {
                 return;
             }
             bookJsonString = buffer.toString();
-        } catch (Exception e) {
+            getBookFromJson(ean, bookJsonString);
+        } catch (IOException e) {
             Log.e(LOG_TAG, "Error ", e);
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, e.getMessage(), e);
+            e.printStackTrace();
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -141,8 +147,18 @@ public class BookService extends IntentService {
                     Log.e(LOG_TAG, "Error closing stream", e);
                 }
             }
-
         }
+        return;
+    }
+
+    /*
+    Refactored some code from the fetchBook method into the below method. Before, when there was no
+    internet connection, the application would crash due to a NullPointerException
+    because we were trying to parse a null string. But now this method is called from the same
+    try/catch block where the networking resides, so if there is an error with that, we won't try
+    to parse anything. This is akin to what was done in the Sunshine App.
+     */
+    private void getBookFromJson(String ean, String bookJsonString) throws JSONException {
 
         final String ITEMS = "items";
 
@@ -156,14 +172,17 @@ public class BookService extends IntentService {
         final String IMG_URL_PATH = "imageLinks";
         final String IMG_URL = "thumbnail";
 
+        Log.i(LOG_TAG, "bookJsonString = " + bookJsonString);
+
+
         try {
             JSONObject bookJson = new JSONObject(bookJsonString);
             JSONArray bookArray;
-            if(bookJson.has(ITEMS)){
+            if (bookJson.has(ITEMS)) {
                 bookArray = bookJson.getJSONArray(ITEMS);
-            }else{
+            } else {
                 Intent messageIntent = new Intent(MainActivity.MESSAGE_EVENT);
-                messageIntent.putExtra(MainActivity.MESSAGE_KEY,getResources().getString(R.string.not_found));
+                messageIntent.putExtra(MainActivity.MESSAGE_KEY, getResources().getString(R.string.not_found));
                 LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(messageIntent);
                 return;
             }
@@ -173,31 +192,30 @@ public class BookService extends IntentService {
             String title = bookInfo.getString(TITLE);
 
             String subtitle = "";
-            if(bookInfo.has(SUBTITLE)) {
+            if (bookInfo.has(SUBTITLE)) {
                 subtitle = bookInfo.getString(SUBTITLE);
             }
 
-            String desc="";
-            if(bookInfo.has(DESC)){
+            String desc = "";
+            if (bookInfo.has(DESC)) {
                 desc = bookInfo.getString(DESC);
             }
 
             String imgUrl = "";
-            if(bookInfo.has(IMG_URL_PATH) && bookInfo.getJSONObject(IMG_URL_PATH).has(IMG_URL)) {
+            if (bookInfo.has(IMG_URL_PATH) && bookInfo.getJSONObject(IMG_URL_PATH).has(IMG_URL)) {
                 imgUrl = bookInfo.getJSONObject(IMG_URL_PATH).getString(IMG_URL);
             }
 
             writeBackBook(ean, title, subtitle, desc, imgUrl);
 
-            if(bookInfo.has(AUTHORS)) {
+            if (bookInfo.has(AUTHORS)) {
                 writeBackAuthors(ean, bookInfo.getJSONArray(AUTHORS));
             }
-            if(bookInfo.has(CATEGORIES)){
-                writeBackCategories(ean,bookInfo.getJSONArray(CATEGORIES) );
+            if (bookInfo.has(CATEGORIES)) {
+                writeBackCategories(ean, bookInfo.getJSONArray(CATEGORIES));
             }
-
         } catch (JSONException e) {
-            Log.e(LOG_TAG, "Error ", e);
+            e.printStackTrace();
         }
     }
 
