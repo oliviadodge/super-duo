@@ -57,7 +57,6 @@ public class BarcodeScannerActivity extends Activity implements ZXingScannerView
         String ean = rawResult.getText();
         Log.v(TAG, ean); // Prints scan results
         Log.v(TAG, rawResult.getBarcodeFormat().toString()); // Prints the scan format (qrcode, pdf417 etc.)
-        Toast.makeText(BarcodeScannerActivity.this, "got a book result!!", Toast.LENGTH_LONG).show();
 
         if (ean.length() == 13) {
             Intent resultIntent = new Intent();

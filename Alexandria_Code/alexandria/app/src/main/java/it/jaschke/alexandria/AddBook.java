@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -15,9 +17,13 @@ import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import it.jaschke.alexandria.data.AlexandriaContract;
@@ -57,6 +63,11 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.fragment_add_book, container, false);
+
+        //Check network connectivity to see which view should be displayed
+        if (!isNetworkConnected()) {
+            setupNoInternetView();
+        }
         eanEditText = (EditText) rootView.findViewById(R.id.ean);
 
         eanEditText.addTextChangedListener(new TextWatcher() {
@@ -99,9 +110,13 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
                 //when you're done, remove the toast below.
                 Context context = getActivity();
 
-                //Start up the scanner activity so we can get the ISBN from the barcode
-                Intent scannerIntent = new Intent(context, BarcodeScannerActivity.class);
-                startActivityForResult(scannerIntent, REQUEST_EAN);
+                if (isNetworkConnected()) {
+                    //Start up the scanner activity so we can get the ISBN from the barcode
+                    Intent scannerIntent = new Intent(context, BarcodeScannerActivity.class);
+                    startActivityForResult(scannerIntent, REQUEST_EAN);
+                } else {
+                    setupNoInternetView();
+                }
             }
         });
 
@@ -129,6 +144,41 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         }
 
         return rootView;
+    }
+
+    //Helper method to check if there is an internet connection
+    //so we can get book info from the EAN
+    private boolean isNetworkConnected() {
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+
+        return (networkInfo != null && networkInfo.isConnected());
+    }
+
+    //Helper method to use when there is no internet
+    private void setupNoInternetView() {
+        //Remove the scan book layout and add the "Can't connect
+        //to network" layout
+        rootView.findViewById(R.id.relativelayout_add_book).setVisibility(View.INVISIBLE);
+
+
+        rootView.findViewById(R.id.linearlayout_no_internet).setVisibility(View.VISIBLE);;
+
+        rootView.findViewById(R.id.button_try_again).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isNetworkConnected()) {
+                    RelativeLayout rl = (RelativeLayout) rootView.findViewById(R.id.relativelayout_add_book);
+                    rl.setVisibility(View.VISIBLE);
+
+                    LinearLayout ll = (LinearLayout) rootView.findViewById(R.id.linearlayout_no_internet);
+                    ll.setVisibility(View.INVISIBLE);
+                } else {
+                    Toast.makeText(getActivity(), getString(R.string.toast_no_internet), Toast.LENGTH_LONG).show();
+                }
+            }
+        });
     }
 
     @Override
