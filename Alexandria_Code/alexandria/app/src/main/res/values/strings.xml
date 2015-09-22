@@ -27,7 +27,7 @@
 
 
     <!--Toasts-->
-    <string name="toast_no_internet">Could not find a network connection</string>
+    <string name="toast_no_internet">Could not find a network connection.</string>
 
     <!--Layout Strings-->
     <string name="textview_no_internet">Can\'t find a network connection. Please connect and try again.</string>

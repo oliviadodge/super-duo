@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:minWidth="@dimen/widget_scores_default_width"
+        android:minHeight="@dimen/widget_scores_default_height"
+        android:minResizeHeight="@dimen/widget_scores_min_resize_height"
+        android:minResizeWidth="@dimen/widget_scores_min_resize_width"
+        android:updatePeriodMillis="86400000"
+        android:initialLayout="@layout/widget_scores"
+        android:resizeMode="horizontal"
+        android:widgetCategory="home_screen"
+        tools:ignore="UnusedAttribute"    >
+        <!--android:previewImage="@drawable/widget_scores_preview_image"-->
+        <!--TODO get a preview image from Widget Preview and put it in drawable-nodpi-->
+
+</appwidget-provider>
