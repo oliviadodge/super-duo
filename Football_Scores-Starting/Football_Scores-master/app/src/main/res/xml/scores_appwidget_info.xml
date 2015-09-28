@@ -9,8 +9,6 @@
         android:initialLayout="@layout/widget_scores"
         android:resizeMode="horizontal"
         android:widgetCategory="home_screen"
-        tools:ignore="UnusedAttribute"    >
-        <!--android:previewImage="@drawable/widget_scores_preview_image"-->
-        <!--TODO get a preview image from Widget Preview and put it in drawable-nodpi-->
-
+        tools:ignore="UnusedAttribute"
+    >
 </appwidget-provider>

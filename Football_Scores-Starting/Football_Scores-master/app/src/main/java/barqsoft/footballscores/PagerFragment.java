@@ -1,6 +1,9 @@
 package barqsoft.footballscores;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -30,17 +33,38 @@ public class PagerFragment extends Fragment
         View rootView = inflater.inflate(R.layout.pager_fragment, container, false);
         mPagerHandler = (ViewPager) rootView.findViewById(R.id.pager);
         mPagerAdapter = new myPageAdapter(getChildFragmentManager());
-        for (int i = 0;i < NUM_PAGES;i++)
-        {
-            Date fragmentdate = new Date(System.currentTimeMillis()+((i-2)*86400000));
-            SimpleDateFormat mformat = new SimpleDateFormat("yyyy-MM-dd");
-            viewFragments[i] = new MainScreenFragment();
-            viewFragments[i].setFragmentDate(mformat.format(fragmentdate));
+
+        if (checkLayoutDirectionIsRTL()) {
+            int index = 0;
+            for (int i = NUM_PAGES; i > 0; i--) {
+                Date fragmentdate = new Date(System.currentTimeMillis() + ((i - 3) * 86400000));
+                SimpleDateFormat mformat = new SimpleDateFormat("yyyy-MM-dd");
+                viewFragments[index] = new MainScreenFragment();
+                viewFragments[index].setFragmentDate(mformat.format(fragmentdate));
+                index++;
+            }
+        } else {
+            for (int i = 0;i < NUM_PAGES;i++)
+            {
+                Date fragmentdate = new Date(System.currentTimeMillis()+((i-2)*86400000));
+                SimpleDateFormat mformat = new SimpleDateFormat("yyyy-MM-dd");
+                viewFragments[i] = new MainScreenFragment();
+                viewFragments[i].setFragmentDate(mformat.format(fragmentdate));
+            }
         }
         mPagerHandler.setAdapter(mPagerAdapter);
         mPagerHandler.setCurrentItem(MainActivity.current_fragment);
         return rootView;
     }
+
+    //Helper method to determine what layout direction the phone is using
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    private boolean checkLayoutDirectionIsRTL() {
+        Configuration config = getResources().getConfiguration();
+        return (config.getLayoutDirection() == View.LAYOUT_DIRECTION_RTL);
+    }
+
+
     private class myPageAdapter extends FragmentStatePagerAdapter
     {
         @Override
@@ -61,10 +85,14 @@ public class PagerFragment extends Fragment
         }
         // Returns the page title for the top indicator
         @Override
-        public CharSequence getPageTitle(int position)
-        {
-            return getDayName(getActivity(),System.currentTimeMillis()+((position-2)*86400000));
+        public CharSequence getPageTitle(int position) {
+            if (checkLayoutDirectionIsRTL()) {
+               return getDayName(getActivity(), System.currentTimeMillis() + ((2 - position) * 86400000));
+            } else {
+                return getDayName(getActivity(), System.currentTimeMillis() + ((position - 2) * 86400000));
+            }
         }
+
         public String getDayName(Context context, long dateInMillis) {
             // If the date is today, return the localized version of "Today" instead of the actual
             // day name.

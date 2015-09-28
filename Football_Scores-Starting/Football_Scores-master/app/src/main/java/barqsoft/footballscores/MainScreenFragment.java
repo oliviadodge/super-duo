@@ -100,5 +100,8 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
         mAdapter.swapCursor(null);
     }
 
+    public String getFragmentDate() {
+        return fragmentdate[0];
+    }
 
 }

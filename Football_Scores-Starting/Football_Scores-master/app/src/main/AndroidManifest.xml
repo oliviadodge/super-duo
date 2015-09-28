@@ -10,6 +10,7 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme" >
         <activity
             android:name=".MainActivity"
@@ -20,19 +21,41 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <receiver android:name=".widget.ScoresWidgetProvider"
-            android:label="@string/title_widget_scores">
+
+        <receiver
+            android:name=".widget.ScoresWidgetProvider"
+            android:label="@string/title_widget_scores" >
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="barqsoft.footballscores.ACTION_DATA_UPDATED"/>
+                <action android:name="barqsoft.footballscores.ACTION_DATA_UPDATED" />
             </intent-filter>
-            <meta-data android:name="android.appwidget.provider"
+
+            <meta-data
+                android:name="android.appwidget.provider"
                 android:resource="@xml/scores_appwidget_info" />
         </receiver>
 
         <provider
             android:name=".ScoresProvider"
             android:authorities="barqsoft.footballscores" />
+
+        <receiver
+            android:name=".widget.DetailWidgetProvider"
+            android:label="@string/title_widget_detail"
+            android:enabled="@bool/widget_detail_enabled" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.example.android.sunshine.app.ACTION_DATA_UPDATED" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/widget_info_detail" />
+        </receiver>
+
+       <service
+            android:name=".widget.DetailWidgetRemoteViewsService"
+            android:enabled="@bool/widget_detail_enabled"
+            android:exported="false"
+            android:permission="android.permission.BIND_REMOTEVIEWS" />
 
         <activity
             android:name=".AboutActivity"
@@ -42,10 +65,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="barqsoft.footballscores.MainActivity" />
         </activity>
+
         <service android:name=".service.myFetchService" />
         <service android:name=".widget.ScoresWidgetIntentService" />
-        <service android:name=".widget.ScoresWidgetRemoteViewsService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+        <activity
+            android:name=".DetailWidgetActivity"
+            android:label="@string/title_activity_detail_widget" >
+        </activity>
     </application>
 
 </manifest>

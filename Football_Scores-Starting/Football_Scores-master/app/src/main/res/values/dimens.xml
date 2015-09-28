@@ -11,14 +11,16 @@
     <!-- Scores Widget -->
     <dimen name="widget_scores_default_width">110dp</dimen>
     <dimen name="widget_scores_default_height">40dp</dimen>
-    <dimen name="widget_scores_min_resize_width">40dp</dimen>
+    <dimen name="widget_scores_min_resize_width">110dp</dimen>
     <dimen name="widget_scores_min_resize_height">@dimen/widget_scores_default_height</dimen>
     <dimen name="widget_scores_large_width">220dp</dimen>
 
+    <!--Detail Widget-->
+    <dimen name="widget_detail_default_width">180dp</dimen>
+    <dimen name="widget_detail_default_height">180dp</dimen>
+    <dimen name="widget_detail_min_resize_width">110dp</dimen>
+    <dimen name="widget_detail_min_resize_height">110dp</dimen>
 
-    <!-- Text Sizes - We are using DP here rather than SP because these are already large
-         font sizes, and going larger will cause lots of view problems. -->
-    <dimen name="scores_widget_text_size">24dp</dimen>
 
     <!-- This is an odd width, but we're trying to match the font closely to keep things working
          on devices that don't yet have Roboto -->

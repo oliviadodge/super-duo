@@ -85,17 +85,23 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
             public void afterTextChanged(Editable s) {
                 Log.v(TAG, "Text changed!");
                 ean = s.toString();
+
+//                if (ean.length() < 13 && ean.startsWith("978")) {
+//                    //Only clear fields if the 13-digit EAN is being entered.
+//                    //Otherwise we want to keep the fields of the last book that was entered.
+//                    Log.v(TAG, "clear fields called");
+//                    ean = null;
+//                    clearFields();
+//                    return;
+//                }
                 //catch isbn10 numbers
                 if (ean.length() == 10 && !ean.startsWith("978")) {
                     ean = "978" + ean;
                 }
-                if ((ean.length() < 13) || (ean.length() > 13)) {
-                    Log.v(TAG, "clear fields called");
-                    ean = null;
-                    clearFields();
-                    return;
+
+                if (ean.length() == 13) {
+                    addBookFromEAN(ean);
                 }
-                addBookFromEAN(ean);
             }
         });
 
@@ -124,6 +130,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
             @Override
             public void onClick(View view) {
                 eanEditText.setText("");
+                clearFields();
             }
         });
 
