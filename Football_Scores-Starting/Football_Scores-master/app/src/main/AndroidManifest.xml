@@ -66,6 +66,15 @@
                 android:value="barqsoft.footballscores.MainActivity" />
         </activity>
 
+        <activity
+            android:name=".LicensesActivity"
+            android:label="@string/title_licenses"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="barqsoft.footballscores.MainActivity" />
+        </activity>
+
         <service android:name=".service.myFetchService" />
         <service android:name=".widget.ScoresWidgetIntentService" />
         <activity

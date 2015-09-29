@@ -21,6 +21,8 @@ import barqsoft.footballscores.R;
 
 /**
  * RemoteViewsService controlling the data being shown in the scrollable weather detail widget
+ *Much of this code comes from the open source app Sunshine, built by Google. See
+ *the Licenses tab under the menu.
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class DetailWidgetRemoteViewsService extends RemoteViewsService {

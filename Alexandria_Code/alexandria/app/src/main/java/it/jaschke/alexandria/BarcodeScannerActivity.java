@@ -18,6 +18,8 @@ import java.util.ListIterator;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
+//Much of the following code uses the ZXing library, which can be found on GitHub.
+
 public class BarcodeScannerActivity extends Activity implements ZXingScannerView.ResultHandler {
     private static final String TAG = BarcodeScannerActivity.class.getSimpleName();
 

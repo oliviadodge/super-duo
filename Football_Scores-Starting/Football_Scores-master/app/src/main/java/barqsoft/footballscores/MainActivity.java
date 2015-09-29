@@ -54,6 +54,11 @@ public class MainActivity extends ActionBarActivity
             Intent start_about = new Intent(this,AboutActivity.class);
             startActivity(start_about);
             return true;
+        }else if (id == R.id.action_licenses)
+        {
+            Intent start_licenses = new Intent(this,LicensesActivity.class);
+            startActivity(start_licenses);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);

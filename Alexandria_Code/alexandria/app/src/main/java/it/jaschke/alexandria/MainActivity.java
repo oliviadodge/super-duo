@@ -77,6 +77,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
             case 2:
                 nextFragment = new About();
                 break;
+            case 3:
+                nextFragment = new Licenses();
+                break;
 
         }
 

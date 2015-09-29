@@ -24,6 +24,9 @@ import barqsoft.footballscores.R;
 
 /**
  * Created by olivi on 9/20/2015.
+ *
+ *Much of this code comes from the open source app Sunshine, built by Google. See
+ *the Licenses tab under the menu.
  */
 public class ScoresWidgetIntentService extends IntentService {
 
